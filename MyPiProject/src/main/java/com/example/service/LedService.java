@@ -9,21 +9,32 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPin;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.wiringpi.GpioUtil;
 
 @Component
 public class LedService implements LedImpl {
+
+	private final Logger logger = Logger.getLogger(this.getClass());
 	
 	private static final String PIN_ACTIVATED = "pin activated";
 	private static final String SHUTDOWN = "shutdown.";
 	private static final String MY_LED = "MyLED";
 	private static final String ON = "on";
 	private static final String OFF = "off";
-	private final Logger logger = Logger.getLogger(this.getClass());
 	private static GpioPinDigitalOutput pin=null;
 	private static final GpioController gpio = GpioFactory.getInstance();
+	private static  Pin GPIO_PIN = RaspiPin.GPIO_01;
 	
+	public static Pin getGPIO_PIN() {
+		return GPIO_PIN;
+	}
+
+	public static void setGPIO_PIN(int pinNumber) {
+		GPIO_PIN = RaspiPin.getPinByAddress(pinNumber);
+	}
+
 	public static GpioController getGpio() {
 		return gpio;
 	}
@@ -50,10 +61,15 @@ public class LedService implements LedImpl {
 	public String getInstanceAndPinHigh() {
 		if (pin==null) {
 			GpioUtil.enableNonPrivilegedAccess();
-			 pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, MY_LED);
+			 pin = gpio.provisionDigitalOutputPin(getGPIO_PIN(), MY_LED);
 			 logger.info(PIN_ACTIVATED);
 		}
 		return PIN_ACTIVATED;
+	}
+	
+	public String getInstanceAndPinHighWithPinNumber(int pinNumber) {
+		setGPIO_PIN(pinNumber);
+		return getInstanceAndPinHigh();
 	}
 	
 	/* (non-Javadoc)
