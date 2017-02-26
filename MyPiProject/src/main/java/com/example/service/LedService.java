@@ -3,6 +3,7 @@ package com.example.service;
 import java.util.Collection;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
@@ -11,6 +12,7 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.wiringpi.GpioUtil;
 
+@Component
 public class LedService implements LedImpl {
 	
 	private static final String PIN_ACTIVATED = "pin activated";
